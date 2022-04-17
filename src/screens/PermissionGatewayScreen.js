@@ -23,6 +23,8 @@ const PermissionGatewayScreen = ({ navigation }) => {
   // const [ brightnessPermit, setBrightnessPermit ] = useState('denied');
   // const [ systemBrightnessPermit, setSystemBrightnessPermit ] = useState('denied');
 
+  console.log('permission gateway', locationPermit);
+
   const {
     state: { user },
   } = useContext(DriverContext);

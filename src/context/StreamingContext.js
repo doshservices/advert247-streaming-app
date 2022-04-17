@@ -1,5 +1,6 @@
 import createDataContext from "./createDataContext";
 import adverts247Api from "../api/adverts247Api";
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const streamingReducer = (state, action) => {
   switch (action.type) {
@@ -14,10 +15,13 @@ const streamingReducer = (state, action) => {
 
 const getStreamingStatus = (dispatch) => async (driverId, cancelTokn) => {
   try {
+    const token = await AsyncStorage.getItem("token");
     const response = await adverts247Api.get(`/stream/${driverId}`, {
       cancelToken: cancelTokn,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
     });
-    // console.log(response.data.driver);
     dispatch({
       type: "set_streaming_status",
       payload: response.data.data.streamStatus,

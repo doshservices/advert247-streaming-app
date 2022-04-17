@@ -13,12 +13,10 @@ export default () => {
     const source = adverts247Api.CancelToken.source();
 
     const checkForStreamStatus = async() => {
-        // console.log('works');
         await getStreamingStatus(user.id, source.token);
     }
 
     useEffect(() => {
-
         checkForStreamStatus();
         // console.log(source.token);
 

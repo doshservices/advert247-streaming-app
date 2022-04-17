@@ -40,7 +40,7 @@ const NoActivityScreen = ({ navigation }) => {
     (async () => {
       const locationPermission = await checkLocationPermission();
 
-      // console.log(locationPermission);
+      console.log(locationPermission);
       if (!locationPermission) {
         navigation.navigate("PermissionGateway");
       }
@@ -67,7 +67,12 @@ const NoActivityScreen = ({ navigation }) => {
           <Ionicons name="ellipsis-vertical" size={28} color="white" />
         </MenuTrigger>
         <MenuOptions>
-          <MenuOption onSelect={() => signoutDriver()}>
+          <MenuOption
+            onSelect={() => {
+              console.log("logout");
+              signoutDriver();
+            }}
+          >
             <Text style={{ fontSize: hp("4.5%"), paddingLeft: 10 }}>
               Logout
             </Text>

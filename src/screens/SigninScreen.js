@@ -79,18 +79,17 @@ const SigninScreen = () => {
   };
 
   const signIn = () => {
-      const data = {
-          email: email,
-          password: password
-      }
+    const data = {
+      email: email,
+      password: password,
+    };
 
-      const validated = validateInput();
+    const validated = validateInput();
 
-      if(validated) {
-          signinAndNavigate(signinDriver, data);
-      }
-
-  }
+    if (validated) {
+      signinAndNavigate(signinDriver, data);
+    }
+  };
 
   return (
     <ImageBackground

@@ -10,16 +10,15 @@ export default () => {
   } = useContext(DriverContext);
   const {
     state: { streamingStatus },
-    getStreamingStatus,
   } = useContext(StreamingContext);
 
   useEffect(() => {
-    if (streamingStatus === "off") {
-      customNavigate("NoActivity");
-    } else if (streamingStatus === "on") {
-      customNavigate("Welcome");
+    if (user) {
+      streamingStatus === "off"
+        ? customNavigate("NoActivity")
+        : customNavigate("Welcome");
     }
-  }, [streamingStatus]);
+  }, [user, streamingStatus]);
 
   const signinAndNavigate = (signinFunc, data) => {
     if (!data) {
