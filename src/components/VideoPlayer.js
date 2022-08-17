@@ -43,12 +43,8 @@ export default class VideoPlayer extends React.Component {
     const savedIndex = await AsyncStorage.getItem("playlistIndex");
     const parsedIndexObj = savedIndex && JSON.parse(savedIndex);
 
-    const { mappedPlaylist } = this.props;
-
-    const isLastIndex = parsedIndexObj.atIndex + 1 === mappedPlaylist.length;
-
     if (parsedIndexObj) {
-      this.setState({ index: isLastIndex ? 0 : parsedIndexObj.atIndex + 1 });
+      this.setState({ index: parsedIndexObj.atIndex });
     }
 
     if (this._isMounted) {
@@ -174,7 +170,7 @@ export default class VideoPlayer extends React.Component {
       this.props.navigation.navigate("GameStart");
     } else {
       const { playlist, index } = this.state;
-      console.log(playlist, index);
+
       const source = {
         uri: prepareVideoUrl(
           playlist[index].contentType === "campaign",
