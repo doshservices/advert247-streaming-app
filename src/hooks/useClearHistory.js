@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import { Context as RiderContext } from '../context/riderContext';
-import { Context as TriviaContext } from '../context/triviaContext';
-import { Context as VodContentContext } from '../context/vodContentContext';
+import { Context as RiderContext } from '../context/RiderContext';
+import { Context as TriviaContext } from '../context/TriviaContext';
+import { Context as VodContentContext } from '../context/VodContentContext';
 
 
 export default () => {

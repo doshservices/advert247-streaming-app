@@ -2,8 +2,18 @@ import createDataContext from "./createDataContext";
 import adverts247Api from "../api/adverts247Api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const UPDATING_MEDIA_PLAYS = "updating_media_plays";
+const UPDATE_MEDIA_SUCCESS = "update_media_success";
+const UPDATE_MEDIA_FAIL = "update_media_fail";
+
 const vodReducer = (state, action) => {
   switch (action.type) {
+    case UPDATING_MEDIA_PLAYS:
+      return { ...state, updatingMediaPlays: action.payload };
+    case UPDATE_MEDIA_SUCCESS:
+      return { ...state, updateMediaSuccess: action.payload };
+    case UPDATE_MEDIA_FAIL:
+      return { ...state, updateMediaError: action.payload };
     case "get_entertain_contents":
       return {
         ...state,
@@ -27,6 +37,9 @@ const vodReducer = (state, action) => {
   }
 };
 
+/**
+ * @deprecated (not used in v2)
+ */
 const getEntertainContent = (dispatch) => async () => {
   try {
     const token = await AsyncStorage.getItem("token");
@@ -51,6 +64,9 @@ const getEntertainContent = (dispatch) => async () => {
   }
 };
 
+/**
+ * @deprecated (not used in v2)
+ */
 const getAdContent = (dispatch) => async () => {
   try {
     const token = await AsyncStorage.getItem("token");
@@ -75,6 +91,9 @@ const getAdContent = (dispatch) => async () => {
   }
 };
 
+/**
+ * @deprecated (not used in v2)
+ */
 const savePlayedIdx = (dispatch) => (idxArray) => {
   dispatch({
     type: "save_played_index",
@@ -82,6 +101,9 @@ const savePlayedIdx = (dispatch) => (idxArray) => {
   });
 };
 
+/**
+ * @deprecated (not used in v2)
+ */
 const savePlayedAdsIdx = (dispatch) => (idxArray) => {
   dispatch({
     type: "save_played_ads",
@@ -89,11 +111,49 @@ const savePlayedAdsIdx = (dispatch) => (idxArray) => {
   });
 };
 
+/**
+ * @deprecated (not used in v2)
+ */
 const clearPlaylistHistory = (dispatch) => () => {
   // console.log('clear works', 3);
   dispatch({
     type: "clear_history",
   });
+};
+
+const updateMediaItemPlays = (dispatch) => async (mediaId, data, cb) => {
+  dispatch({ type: UPDATING_MEDIA_PLAYS, payload: true });
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const response = await adverts247Api.patch(
+      `/mediaitems/plays/${mediaId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    dispatch({ type: UPDATING_MEDIA_PLAYS, payload: false });
+    dispatch({ type: UPDATE_MEDIA_SUCCESS, payload: response.data.message });
+    cb && cb();
+  } catch (err) {
+    if (err.response) {
+      dispatch({
+        type: UPDATE_MEDIA_FAIL,
+        payload:
+          err.response.data.message ||
+          "Unable to update media item. Something went wrong",
+      });
+    } else {
+      dispatch({
+        type: UPDATE_MEDIA_FAIL,
+        payload: "Unable to update media item. Something went wrong",
+      });
+    }
+    dispatch({ type: UPDATING_MEDIA_PLAYS, payload: false });
+  }
 };
 
 export const { Context, Provider } = createDataContext(
@@ -104,8 +164,12 @@ export const { Context, Provider } = createDataContext(
     savePlayedIdx,
     savePlayedAdsIdx,
     clearPlaylistHistory,
+    updateMediaItemPlays,
   },
   {
+    updatingMediaPlays: false,
+    updateMediaSuccess: null,
+    updateMediaError: null,
     mediaList: { videos: [], ads: [] },
     entertainPlayedIdx: [],
     adsPlayedIdx: [],

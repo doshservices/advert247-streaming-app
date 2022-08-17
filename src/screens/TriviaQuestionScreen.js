@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Context as TriviaContext } from "../context/triviaContext";
-import { Context as RiderContext } from "../context/riderContext";
+import { Context as TriviaContext } from "../context/TriviaContext";
+import { Context as RiderContext } from "../context/RiderContext";
 import useStreamingStatus from "../hooks/useStreamingStatus";
 import useClearHistory from "../hooks/useClearHistory";
 import {

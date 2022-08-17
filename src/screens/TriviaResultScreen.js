@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Context as TriviaContext } from "../context/triviaContext";
+import { Context as TriviaContext } from "../context/TriviaContext";
 import useStreamingStatus from "../hooks/useStreamingStatus";
 import useClearHistory from "../hooks/useClearHistory";
 import {

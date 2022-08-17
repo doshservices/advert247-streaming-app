@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,20 +8,23 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import VideoPlayer from "../components/VideoPlayer";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Context as DriverContext } from "../context/DriverContext";
 import Slider from "@react-native-community/slider";
 import * as Brightness from "expo-brightness";
-import { Context as VodContentContext } from "../context/vodContentContext";
-import useStreamingStatus from "../hooks/useStreamingStatus";
-import useClearHistory from "../hooks/useClearHistory";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useKeepAwake } from "expo-keep-awake";
+
+import VideoPlayer from "../components/VideoPlayer";
+import { Context as DriverContext } from "../context/DriverContext";
+import { Context as VodContentContext } from "../context/VodContentContext";
+import { Context as PlaylistContext } from "../context/PlaylistContext";
+import { Context as CampaignContext } from "../context/CampaignContext";
+import useStreamingStatus from "../hooks/useStreamingStatus";
+import useClearHistory from "../hooks/useClearHistory";
 
 const SCREEN_WIDTH = Dimensions.get("screen").width;
 const SCREEN_HEIGHT = Dimensions.get("screen").height;
@@ -33,9 +36,15 @@ const AdPlayerScreen = ({ navigation }) => {
   const [showBrightnessSlider, setShowBrightnessSlider] = useState(false);
   const [volumeValue, setVolumeValue] = useState(1);
   const [brightnessValue, setBrightnessValue] = useState(0);
+
   const {
     state: { user },
   } = useContext(DriverContext);
+
+  const {
+    state: { updatingCampaignStat },
+    updateCampaignStat,
+  } = useContext(CampaignContext);
 
   const [streamStatus] = useStreamingStatus();
   const [clearHistory] = useClearHistory();
@@ -51,12 +60,11 @@ const AdPlayerScreen = ({ navigation }) => {
   }, [streamStatus]);
 
   const {
-    state: { mediaList, error, entertainPlayedIdx, adsPlayedIdx },
-    getEntertainContent,
-    getAdContent,
-    savePlayedIdx,
-    savePlayedAdsIdx,
-  } = useContext(VodContentContext);
+    state: { fetchingGeneralPlaylist, generalPlaylist },
+    fetchGeneralPlaylist,
+  } = useContext(PlaylistContext);
+
+  const { updateMediaItemPlays } = useContext(VodContentContext);
 
   const didCancel = useRef(null);
   const volumeTimer = useRef(null);
@@ -64,9 +72,20 @@ const AdPlayerScreen = ({ navigation }) => {
 
   didCancel.current = false;
 
+  const mappedPlaylist = useMemo(
+    () =>
+      generalPlaylist.map((item) => {
+        if (item.mediaType === "video") {
+          const splitUrl = item.mediaUrl.split("/");
+          item.key = splitUrl[splitUrl.length - 1].replace(".mp4", "");
+        }
+        return item;
+      }),
+    [generalPlaylist]
+  );
+
   useEffect(() => {
-    getEntertainContent();
-    getAdContent();
+    fetchGeneralPlaylist();
     // console.log(user, 20);
 
     (async () => {
@@ -83,10 +102,6 @@ const AdPlayerScreen = ({ navigation }) => {
       clearTimeout(brightnessTimer.current);
     };
   }, []);
-
-  useEffect(() => {
-    // console.log(error)
-  }, [error]);
 
   useEffect(() => {
     (async () => {
@@ -140,11 +155,7 @@ const AdPlayerScreen = ({ navigation }) => {
     }, 1000);
   };
 
-  if (
-    !driverInfo &&
-    mediaList.videos.length === 0 &&
-    mediaList.ads.length === 0
-  ) {
+  if (!driverInfo && generalPlaylist.length === 0) {
     return <View style={styles.nullBg}></View>;
   }
 
@@ -159,13 +170,11 @@ const AdPlayerScreen = ({ navigation }) => {
         videoWidth={SCREEN_WIDTH}
         videoHeight={SCREEN_HEIGHT - SCREEN_HEIGHT * 0.13}
         muteState={mute}
+        mappedPlaylist={mappedPlaylist}
         volumeState={volumeValue}
-        mediaBucket={mediaList}
-        entertainPlayedIdx={entertainPlayedIdx}
-        adsPlayedIdx={adsPlayedIdx}
-        savePlayedIdx={savePlayedIdx}
-        savePlayedAdsIdx={savePlayedAdsIdx}
         navigation={navigation}
+        updateCampaign={updateCampaignStat}
+        updateMediaPlays={updateMediaItemPlays}
       />
       <View style={styles.settingsBar}>
         <Image

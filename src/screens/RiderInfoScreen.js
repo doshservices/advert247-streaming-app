@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Text, StatusBar } from "react-native";
 import { Button } from "react-native-elements";
 import CustomInput from "../components/CustomInput";
-import { Context as RiderContext } from "../context/riderContext";
+import { Context as RiderContext } from "../context/RiderContext";
 import useStreamingStatus from "../hooks/useStreamingStatus";
 import useClearHistory from "../hooks/useClearHistory";
 import {
