@@ -21,7 +21,7 @@ const RiderInfoScreen = ({ navigation }) => {
     phoneNumber: "",
   });
 
-  const [riderFormCounter, setRiderFormCounter] = useState(60);
+  const [riderFormCounter, setRiderFormCounter] = useState(50);
   const formTimer = useRef(null);
 
   const {
