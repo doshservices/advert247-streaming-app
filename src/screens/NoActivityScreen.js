@@ -6,7 +6,6 @@ import {
   StatusBar,
   Text,
 } from "react-native";
-import { Button } from "react-native-elements";
 import { Context as DriverContext } from "../context/DriverContext";
 import useStreamingStatus from "../hooks/useStreamingStatus";
 import {
@@ -62,6 +61,12 @@ const NoActivityScreen = ({ navigation }) => {
         resizeMode="contain"
         style={styles.logoStyle}
       />
+      <Text style={styles.slogan}>Reach your true fans</Text>
+      <Text
+        style={{ fontSize: hp("4.5%"), color: "#FFF", marginTop: hp("9.5%") }}
+      >
+        Connecting<Text style={{ color: "#FE0000" }}>...</Text>
+      </Text>
       <Menu style={styles.popupBtn}>
         <MenuTrigger>
           <Ionicons name="ellipsis-vertical" size={28} color="white" />
@@ -69,7 +74,6 @@ const NoActivityScreen = ({ navigation }) => {
         <MenuOptions>
           <MenuOption
             onSelect={() => {
-              console.log("logout");
               signoutDriver();
             }}
           >
@@ -97,6 +101,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: hp("11%"),
     right: wp("3.2%"),
+  },
+  slogan: {
+    color: "#fff",
+    fontSize: hp("5%"),
   },
 });
 

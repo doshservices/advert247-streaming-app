@@ -14,9 +14,9 @@ const TriviaResultScreen = ({ navigation }) => {
   const {
     state: { currentTriviaSession },
   } = useContext(TriviaContext);
-  const [point, setPoint] = useState();
-  const [questionNumber, setQuestionNumber] = useState();
-  const [answeredCorrectly, setAnsweredCorrectly] = useState();
+  const [point, setPoint] = useState(0);
+  const [questionNumber, setQuestionNumber] = useState(0);
+  const [answeredCorrectly, setAnsweredCorrectly] = useState(0);
 
   const [streamStatus] = useStreamingStatus();
   const [clearHistory] = useClearHistory();

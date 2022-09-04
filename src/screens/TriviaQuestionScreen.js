@@ -100,7 +100,6 @@ const TriviaQuestionScreen = ({ navigation }) => {
       } else {
         navigation.navigate("RiderInfo", { triviaSession });
       }
-      // console.log('works');
     } else {
       let newCounter = triviaCounter - 1;
 
@@ -150,7 +149,7 @@ const TriviaQuestionScreen = ({ navigation }) => {
 
     const { question, quizImgUri, options, answer, points } =
       quizzes[randomIdx];
-    // console.log(options);
+
     const shuffledOptions = shuffleQuizOptions(options);
 
     setQuestionObj({
@@ -171,7 +170,6 @@ const TriviaQuestionScreen = ({ navigation }) => {
   }, [quizzes]);
 
   const goToNextQuestion = (optionVal) => {
-    // console.log(optionVal);
     if (optionVal === questionObj.answer) {
       setTriviaSession({
         totalPoints: triviaSession.totalPoints + questionObj.points,

@@ -5,7 +5,7 @@ import axios from "axios";
 // http://api.adverts247.com/api
 
 let instance = axios.create({
-  baseURL: `http://api.adverts247.com/api`,
+  baseURL: `https://491a-2a02-908-5d4-4f00-6d3e-8250-a652-988e.ngrok.io/api`,
 });
 
 instance.CancelToken = axios.CancelToken;

@@ -21,6 +21,9 @@ const RiderInfoScreen = ({ navigation }) => {
     phoneNumber: "",
   });
 
+  const [riderFormCounter, setRiderFormCounter] = useState(60);
+  const formTimer = useRef(null);
+
   const {
     state: { loading, error },
     checkRider,
@@ -34,8 +37,19 @@ const RiderInfoScreen = ({ navigation }) => {
   useKeepAwake();
 
   useEffect(() => {
+    if (riderFormCounter === 0) {
+      navigation.navigate("AdPlayer");
+    } else {
+      let newCounter = riderFormCounter - 1;
+
+      formTimer.current = setTimeout(() => {
+        setRiderFormCounter(newCounter);
+      }, 1000);
+    }
+  }, [riderFormCounter]);
+
+  useEffect(() => {
     if (streamStatus === "off") {
-      // console.log(streamStatus);
       clearHistory();
       navigation.navigate("NoActivity");
     }
@@ -43,6 +57,7 @@ const RiderInfoScreen = ({ navigation }) => {
 
   useEffect(() => {
     didCancel.current = false;
+
     // console.log(navigation.state.params.triviaSession);
 
     // const navigationTimer = setTimeout(() => {
@@ -50,14 +65,11 @@ const RiderInfoScreen = ({ navigation }) => {
     // }, 80000)
 
     return () => {
+      clearTimeout(formTimer.current);
       didCancel.current = true;
       // clearTimeout(navigationTimer);
     };
   }, []);
-
-  useEffect(() => {
-    // console.log(error);
-  }, [error]);
 
   const validateInput = (name, phoneNumber, email) => {
     let validMail =
