@@ -10,7 +10,7 @@ import {
 import LoaderAnimation from "./LoaderAnimation";
 import { prepareVideoUrl } from "../utils/useCloudfrontForVideo";
 
-const TIMETILLGAME = 540;
+const TIME_TILL_GAME = 540;
 
 export default class VideoPlayer extends React.Component {
   constructor(props) {
@@ -45,6 +45,12 @@ export default class VideoPlayer extends React.Component {
 
     if (parsedIndexObj) {
       this.setState({ index: parsedIndexObj.atIndex });
+    }
+
+    const { timeToGame } = this.props.navigation.state.params;
+
+    if (timeToGame) {
+      this.setState({ timeToGamePrompt: timeToGame });
     }
 
     if (this._isMounted) {
@@ -165,11 +171,19 @@ export default class VideoPlayer extends React.Component {
       this.playbackInstance = null;
     }
 
-    if (this.state.timeToGamePrompt >= TIMETILLGAME) {
+    if (this.state.timeToGamePrompt >= TIME_TILL_GAME) {
       this.setState({ timeToGamePrompt: 0 });
       this.props.navigation.navigate("GameStart");
     } else {
       const { playlist, index } = this.state;
+
+      if (playlist[index].mediaType === "image") {
+        this.props.navigation.navigate("AdImageViewer", {
+          timeToGame: this.state.timeToGamePrompt,
+          playlistItem: playlist[index],
+          playlistLength: playlist.length,
+        });
+      }
 
       const source = {
         uri: prepareVideoUrl(
@@ -189,12 +203,7 @@ export default class VideoPlayer extends React.Component {
       try {
         if (this._isMounted) {
           await this._video.loadAsync(source, initialStatus);
-        }
-        // this._video.onPlaybackStatusUpdate(this._onPlaybackStatusUpdate);
-        if (this._isMounted) {
           this.playbackInstance = this._video;
-          // const status = await this._video.getStatusAsync();
-
           this._updateScreenForLoading(false);
         }
       } catch (err) {

@@ -26,6 +26,7 @@ import RiderInfoScreen from "./src/screens/RiderInfoScreen";
 import TriviaResultScreen from "./src/screens/TriviaResultScreen";
 import NoActivityScreen from "./src/screens/NoActivityScreen";
 import PermissionGatewayScreen from "./src/screens/PermissionGatewayScreen";
+import AdImageViewerScreen from "./src/screens/AdImageViewerScreen";
 
 import { setNavigator } from "./src/navigationRef";
 
@@ -45,6 +46,7 @@ const navigator = createSwitchNavigator({
     DriverInfo: DriverInfoScreen,
   }),
   AdPlayer: AdPlayerScreen,
+  AdImageViewer: AdImageViewerScreen,
   GameStart: GameStartScreen,
   GameIntro: GameIntroScreen,
   TriviaQuestion: TriviaQuestionScreen,

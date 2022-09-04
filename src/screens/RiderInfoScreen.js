@@ -11,6 +11,8 @@ import {
 } from "react-native-responsive-screen";
 import { useKeepAwake } from "expo-keep-awake";
 
+const FORM_DISPLAY_TIME = 50;
+
 const RiderInfoScreen = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
   const [riderEmail, setRiderEmail] = useState("");
@@ -21,7 +23,7 @@ const RiderInfoScreen = ({ navigation }) => {
     phoneNumber: "",
   });
 
-  const [riderFormCounter, setRiderFormCounter] = useState(50);
+  const [riderFormCounter, setRiderFormCounter] = useState(FORM_DISPLAY_TIME);
   const formTimer = useRef(null);
 
   const {
