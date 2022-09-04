@@ -37,6 +37,7 @@ const TriviaQuestionScreen = ({ navigation }) => {
     getTriviaQuiz,
     saveAnsweredQuiz,
     setCurrentTriviaSession,
+    updateMultipleQuizAttributes,
   } = useContext(TriviaContext);
 
   const {
@@ -50,12 +51,14 @@ const TriviaQuestionScreen = ({ navigation }) => {
     quizImgUri: "",
     answer: "",
     points: 2,
+    id: "",
   });
   const [triviaCounter, setTriviaCounter] = useState(60);
   const [triviaSession, setTriviaSession] = useState({
     totalPoints: 0,
     questions: 0,
     answeredCorrectly: 0,
+    questionStats: [],
   });
 
   useKeepAwake();
@@ -87,6 +90,15 @@ const TriviaQuestionScreen = ({ navigation }) => {
   useEffect(() => {
     if (triviaCounter === "00") {
       setCurrentTriviaSession(triviaSession);
+
+      const questionStatus = triviaSession.questionStats.map((item) => ({
+        id: item.questionId,
+        timesAnswered: 1,
+        timesAnsweredCorrectly: item.correct ? 1 : 0,
+      }));
+
+      updateMultipleQuizAttributes(questionStatus);
+
       if (riderExist) {
         const { _id } = rider;
         const { totalPoints, questions, answeredCorrectly } = triviaSession;
@@ -147,7 +159,7 @@ const TriviaQuestionScreen = ({ navigation }) => {
     answeredQuestionIdx.push(randomIdx);
     saveAnsweredQuiz(answeredQuestionIdx);
 
-    const { question, quizImgUri, options, answer, points } =
+    const { question, quizImgUri, options, answer, points, id } =
       quizzes[randomIdx];
 
     const shuffledOptions = shuffleQuizOptions(options);
@@ -158,6 +170,7 @@ const TriviaQuestionScreen = ({ navigation }) => {
       answer,
       quizImgUri,
       points,
+      id,
     });
   };
 
@@ -171,15 +184,29 @@ const TriviaQuestionScreen = ({ navigation }) => {
 
   const goToNextQuestion = (optionVal) => {
     if (optionVal === questionObj.answer) {
+      const questionStat = {
+        questionId: questionObj.id,
+        correct: true,
+      };
+
+      const newQuestionStats = [questionStat, ...triviaSession.questionStats];
       setTriviaSession({
         totalPoints: triviaSession.totalPoints + questionObj.points,
         questions: triviaSession.questions + 1,
         answeredCorrectly: triviaSession.answeredCorrectly + 1,
+        questionStats: newQuestionStats,
       });
     } else {
+      const questionStat = {
+        questionId: questionObj.id,
+        correct: false,
+      };
+
+      const newQuestionStats = [questionStat, ...triviaSession.questionStats];
       setTriviaSession({
         ...triviaSession,
         questions: triviaSession.questions + 1,
+        questionStats: newQuestionStats,
       });
     }
 

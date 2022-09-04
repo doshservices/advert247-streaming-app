@@ -47,9 +47,10 @@ export default class VideoPlayer extends React.Component {
       this.setState({ index: parsedIndexObj.atIndex });
     }
 
-    const { timeToGame } = this.props.navigation.state.params;
+    const { navigation } = this.props;
 
-    if (timeToGame) {
+    if (navigation.state?.params?.timeToGame) {
+      const { timeToGame } = navigation.state.params;
       this.setState({ timeToGamePrompt: timeToGame });
     }
 
