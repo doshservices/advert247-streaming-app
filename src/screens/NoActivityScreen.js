@@ -39,7 +39,6 @@ const NoActivityScreen = ({ navigation }) => {
     (async () => {
       const locationPermission = await checkLocationPermission();
 
-      console.log(locationPermission, "here");
       if (!locationPermission) {
         navigation.navigate("PermissionGateway");
       }

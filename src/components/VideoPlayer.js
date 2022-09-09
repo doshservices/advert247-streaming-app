@@ -217,7 +217,7 @@ export default class VideoPlayer extends React.Component {
           this._updateScreenForLoading(false);
         }
       } catch (err) {
-        console.log(err, "here");
+        console.log(err);
       }
     }
   }

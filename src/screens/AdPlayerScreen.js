@@ -168,7 +168,7 @@ const AdPlayerScreen = ({ navigation }) => {
       />
       <VideoPlayer
         videoWidth={SCREEN_WIDTH}
-        videoHeight={SCREEN_HEIGHT - SCREEN_HEIGHT * 0.13}
+        videoHeight={SCREEN_HEIGHT - SCREEN_HEIGHT * 0.1}
         muteState={mute}
         mappedPlaylist={mappedPlaylist}
         volumeState={volumeValue}
@@ -207,7 +207,7 @@ const AdPlayerScreen = ({ navigation }) => {
                 <MaterialIcons
                   style={styles.ctrlIcon}
                   name="brightness-6"
-                  size={hp("3.5%")}
+                  size={hp("3%")}
                   color="#E6E6E6"
                 />
                 <Text style={styles.ctrlLabel}>Brightness</Text>
@@ -236,7 +236,7 @@ const AdPlayerScreen = ({ navigation }) => {
                 <FontAwesome5
                   style={styles.ctrlIcon}
                   name="volume-down"
-                  size={hp("3.5%")}
+                  size={hp("3%")}
                   color="#E6E6E6"
                 />
                 <Text style={styles.ctrlLabel}>Volume</Text>
@@ -249,7 +249,7 @@ const AdPlayerScreen = ({ navigation }) => {
               <FontAwesome5
                 style={styles.ctrlIcon}
                 name="volume-mute"
-                size={hp("3.5%")}
+                size={hp("3%")}
                 color="#E6E6E6"
               />
               <Text style={styles.ctrlLabel}>Mute</Text>
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   },
   settingsBar: {
     width: "100%",
-    height: SCREEN_HEIGHT * 0.13,
+    height: SCREEN_HEIGHT * 0.1,
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -295,8 +295,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("3.4%"),
   },
   logoStyle: {
-    width: hp("35%"),
-    height: hp("25%"),
+    width: hp("30%"),
+    height: hp("20%"),
     // borderColor: '#fff',
     // borderWidth: 2
   },
@@ -308,8 +308,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderColor: "#E3E3E3",
     borderWidth: 2,
-    paddingVertical: hp("1%"),
-    paddingHorizontal: wp("1%"),
+    paddingVertical: hp("0.7%"),
+    paddingHorizontal: wp("0.7%"),
     borderRadius: 5,
     marginRight: wp("7%"),
   },
@@ -327,8 +327,8 @@ const styles = StyleSheet.create({
     color: "#E6E6E6",
   },
   driverImg: {
-    width: hp("11%"),
-    height: hp("11%"),
+    width: hp("9%"),
+    height: hp("9%"),
     borderRadius: hp("5.5%"),
   },
   volumeGroup: {

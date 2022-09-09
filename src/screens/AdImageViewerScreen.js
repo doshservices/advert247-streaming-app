@@ -1,14 +1,28 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StyleSheet, ImageBackground, View, StatusBar } from "react-native";
+import {
+  StyleSheet,
+  ImageBackground,
+  View,
+  StatusBar,
+  Dimensions,
+  Image,
+} from "react-native";
 import { useKeepAwake } from "expo-keep-awake";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import { Context as CampaignContext } from "../context/CampaignContext";
+import { Context as DriverContext } from "../context/DriverContext";
 import useStreamingStatus from "../hooks/useStreamingStatus";
 import useClearHistory from "../hooks/useClearHistory";
 
 const DISPLAY_TIME = 40;
 const TIME_TILL_GAME = 540;
+
+const SCREEN_HEIGHT = Dimensions.get("screen").height;
 
 const AdImageViewerScreen = ({ navigation }) => {
   useKeepAwake();
@@ -21,6 +35,9 @@ const AdImageViewerScreen = ({ navigation }) => {
   const [clearHistory] = useClearHistory();
 
   const { updateCampaignStat } = useContext(CampaignContext);
+  const {
+    state: { user },
+  } = useContext(DriverContext);
 
   useEffect(() => {
     if (streamStatus === "off") {
@@ -97,6 +114,25 @@ const AdImageViewerScreen = ({ navigation }) => {
         resizeMode="cover"
         resizeMethod="resize"
       ></ImageBackground>
+      <View style={styles.settingsBar}>
+        <Image
+          source={require("../../assets/logoAlt.png")}
+          resizeMode="contain"
+          style={styles.logoStyle}
+        />
+        <View style={styles.leftCol}>
+          <View style={styles.driverInfo}>
+            <Image
+              source={
+                user?.profilePhoto
+                  ? { uri: user?.profilePhoto }
+                  : require("../../assets/avatar-placeholder.png")
+              }
+              style={styles.driverImg}
+            />
+          </View>
+        </View>
+      </View>
     </View>
   );
 };
@@ -106,9 +142,37 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    height: SCREEN_HEIGHT - SCREEN_HEIGHT * 0.1,
   },
   container: {
     flex: 1,
+  },
+  settingsBar: {
+    width: "100%",
+    height: SCREEN_HEIGHT * 0.1,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    backgroundColor: "#262525",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: wp("3.4%"),
+  },
+  logoStyle: {
+    width: hp("30%"),
+    height: hp("20%"),
+    // borderColor: '#fff',
+    // borderWidth: 2
+  },
+  leftCol: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  driverImg: {
+    width: hp("9%"),
+    height: hp("9%"),
+    borderRadius: hp("5.5%"),
   },
 });
 
