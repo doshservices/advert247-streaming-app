@@ -39,7 +39,7 @@ const NoActivityScreen = ({ navigation }) => {
     (async () => {
       const locationPermission = await checkLocationPermission();
 
-      console.log(locationPermission);
+      console.log(locationPermission, "here");
       if (!locationPermission) {
         navigation.navigate("PermissionGateway");
       }
@@ -61,7 +61,6 @@ const NoActivityScreen = ({ navigation }) => {
         resizeMode="contain"
         style={styles.logoStyle}
       />
-      <Text style={styles.slogan}>Reach your true fans</Text>
       <Text
         style={{ fontSize: hp("4.5%"), color: "#FFF", marginTop: hp("9.5%") }}
       >

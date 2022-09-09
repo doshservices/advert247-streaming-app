@@ -40,14 +40,22 @@ export default class VideoPlayer extends React.Component {
   async componentDidMount() {
     this._isMounted = true;
 
-    const savedIndex = await AsyncStorage.getItem("playlistIndex");
-    const parsedIndexObj = savedIndex && JSON.parse(savedIndex);
-
-    if (parsedIndexObj) {
-      this.setState({ index: parsedIndexObj.atIndex });
-    }
-
     const { navigation } = this.props;
+
+    if (
+      navigation.state?.params?.lastPlayedIdx ||
+      navigation.state?.params?.lastPlayedIdx === 0
+    ) {
+      const { lastPlayedIdx } = navigation.state.params;
+      this.setState({ index: lastPlayedIdx });
+    } else {
+      const savedIndex = await AsyncStorage.getItem("playlistIndex");
+      const parsedIndexObj = savedIndex && JSON.parse(savedIndex);
+
+      if (parsedIndexObj) {
+        this.setState({ index: parsedIndexObj.atIndex });
+      }
+    }
 
     if (navigation.state?.params?.timeToGame) {
       const { timeToGame } = navigation.state.params;
@@ -183,6 +191,7 @@ export default class VideoPlayer extends React.Component {
           timeToGame: this.state.timeToGamePrompt,
           playlistItem: playlist[index],
           playlistLength: playlist.length,
+          lastPlayedIdx: index,
         });
       }
 
@@ -208,7 +217,7 @@ export default class VideoPlayer extends React.Component {
           this._updateScreenForLoading(false);
         }
       } catch (err) {
-        console.log(err);
+        console.log(err, "here");
       }
     }
   }

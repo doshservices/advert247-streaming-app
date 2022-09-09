@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StyleSheet, ImageBackground } from "react-native";
+import { StyleSheet, ImageBackground, View, StatusBar } from "react-native";
 import { useKeepAwake } from "expo-keep-awake";
 
 import { Context as CampaignContext } from "../context/CampaignContext";
@@ -31,25 +31,19 @@ const AdImageViewerScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (displayTimeCounter === 0) {
-      const { timeToGame, playlistItem, playlistLength } =
+      const { timeToGame, playlistItem, playlistLength, lastPlayedIdx } =
         navigation.state.params;
 
       // make a request to update campaign stat
       updateCampaignStat(playlistItem.resourceRef.id, {
         impressions: 1,
-        playTimeInSeconds: playlistItem.durationInSeconds,
+        playTimeInSeconds: DISPLAY_TIME,
       });
 
-      // increment lastPlayedIndex in local storage
+      // increment lastPlayedIndex
+      const isLastIndex = lastPlayedIdx + 1 === playlistLength;
+      const updatedIndex = isLastIndex ? 0 : lastPlayedIdx + 1;
       (async () => {
-        const lastPlayedIdxJson = await AsyncStorage.getItem("playlistIndex");
-        const lastPlayedObj = lastPlayedIdxJson
-          ? JSON.parse(lastPlayedIdxJson)
-          : { atIndex: 0 };
-
-        const isLastIndex = lastPlayedObj.atIndex + 1 === playlistLength;
-        const updatedIndex = isLastIndex ? 0 : lastPlayedObj.atIndex + 1;
-
         await AsyncStorage.setItem(
           "playlistIndex",
           JSON.stringify({
@@ -63,7 +57,10 @@ const AdImageViewerScreen = ({ navigation }) => {
       if (updatedTimeToGame >= TIME_TILL_GAME) {
         navigation.navigate("GameStart");
       } else {
-        navigation.navigate("GameStart", { timeToGame: updatedTimeToGame });
+        navigation.navigate("AdPlayer", {
+          timeToGame: updatedTimeToGame,
+          lastPlayedIdx: updatedIndex,
+        });
       }
     } else {
       let newCounter = displayTimeCounter - 1;
@@ -84,16 +81,23 @@ const AdImageViewerScreen = ({ navigation }) => {
   const { playlistItem } = navigation.state.params;
 
   return (
-    <ImageBackground
-      source={{
-        uri:
-          playlistItem?.mediaUrl ||
-          "https://i.ytimg.com/vi/w2w0Py9A8IE/maxresdefault.jpg",
-      }}
-      style={styles.adImage}
-      resizeMode="cover"
-      resizeMethod="resize"
-    ></ImageBackground>
+    <View style={styles.container}>
+      <StatusBar
+        backgroundColor="rgba(0, 0, 0, 0.1)"
+        barStyle="light-content"
+        translucent={true}
+      />
+      <ImageBackground
+        source={{
+          uri:
+            playlistItem?.mediaUrl ||
+            "https://i.ytimg.com/vi/w2w0Py9A8IE/maxresdefault.jpg",
+        }}
+        style={styles.adImage}
+        resizeMode="cover"
+        resizeMethod="resize"
+      ></ImageBackground>
+    </View>
   );
 };
 
@@ -102,6 +106,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  container: {
+    flex: 1,
   },
 });
 
