@@ -263,6 +263,8 @@ export default class VideoPlayer extends React.Component {
     } else {
       if (status.error) {
         console.log(`FATAL PLAYER ERROR: ${status.error}`);
+        this._advanceIndex();
+        this._loadNewPlaybackInstance(true);
       }
     }
   };
