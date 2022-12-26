@@ -63,7 +63,7 @@ const NoActivityScreen = ({ navigation }) => {
       <Text
         style={{ fontSize: hp("4.5%"), color: "#FFF", marginTop: hp("9.5%") }}
       >
-        Connecting now<Text style={{ color: "#FE0000" }}>...</Text>
+        Connecting<Text style={{ color: "#FE0000" }}>...</Text>
       </Text>
       <Menu style={styles.popupBtn}>
         <MenuTrigger>
